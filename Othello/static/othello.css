@@ -1,0 +1,137 @@
+#game-title {
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 40px;
+}
+
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    gap: 2px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    background-color: #9fabb9;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* 黑白棋子 */
+.black, .white {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.black {
+    background-color: black;
+}
+
+.white {
+    background-color: white;
+    border: 1px solid black;
+}
+
+/* 轮到用户时，合法落子位置显示深绿色 */
+.valid-move {
+    background-color: #5B7493 !important; /* 深绿色 */
+}
+
+/* AI 或玩家刚刚落的棋子（中间有红点） */
+.ai-move {
+    position: relative;
+}
+
+.ai-move::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 被翻转的棋子（外面有红框） */
+.highlight {
+    border: 2px solid red;
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 24px;
+    color: black;
+    background-color: #ccc;  /* 设置灰色背景 */
+    padding: 10px;  /* 添加一些内边距，让内容不会贴边 */
+    border-radius: 10px;  /* 让背景板有圆角，更美观 */
+    width: 300px;  /* 让它自动适应内容宽度 */
+    margin: 0 auto;  /* 居中 */
+}
+
+.score-container {
+    display: flex;
+    justify-content: center;  /* 让黑白棋子居中 */
+    align-items: center;
+    gap: 20px;  /* 控制黑白棋子之间的间距 */
+    flex-direction: row; /* 让黑白棋子数量横向排列 */
+}
+.black-score, .white-score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.black-circle, .white-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid black;
+}
+.black-circle { background-color: black; }
+.white-circle { background-color: white; }
+
+
+#turn-indicator {
+    text-align: center; /* 让文本水平居中 */
+    font-size: 22px;  /* 增大字体，使其更清晰 */
+    color: white;  /* 让文字变成白色，增强对比度 */
+    background-color: #3D3D3D;  /* 设为蓝色背景 */
+    padding: 5px 15px;  /* 增加内边距，使其更美观 */
+    border-radius: 10px;  /* 让背景有圆角 */
+    width: fit-content;  /* 让背景宽度适应内容 */
+    margin: 15px auto;  /* 上下间距，并居中 */
+}
+
+#restart-container {
+    display: flex;
+    justify-content: center;  /* 水平居中 */
+    margin-top: 20px;  /* 适当调整间距 */
+}
+#restart-button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background-color: #b77f70;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#restart-button:hover {
+    background-color: darkred;
+}

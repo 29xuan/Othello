@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px); /* 8列，每列50px */
+    grid-template-rows: repeat(8, 50px);    /* 8行，每行50px */
+    gap: 2px;  /* 增加棋盘格子间距 */
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    background-color: #008000;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.cell:hover {
+    background-color: #006400;
+}
+
+.black {
+    width: 40px;
+    height: 40px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+.white {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}

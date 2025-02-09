@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Othello</title>
+    <script src="/static/othello.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/othello.css">
+</head>
+
+<body>
+<!--<h1>Othello Game</h1>-->
+<h1 id="game-title">Othello Game</h1>
+
+<!-- 计分板（添加 turn-indicator） -->
+    <div class="scoreboard">
+        <div class="score-container">
+            <span class="black-score">
+                <div class="black-circle"></div> <span id="black-count">8</span>
+            </span>
+            <span class="white-score">
+                <div class="white-circle"></div> <span id="white-count">6</span>
+            </span>
+        </div>
+    </div>
+
+<!-- 让当前回合显示在分数下面 -->
+<div id="turn-indicator">Your turn</div>
+
+<!-- 棋盘 -->
+<div id="board"></div>
+
+<!-- 让 Restart 按钮出现在棋盘下方 -->
+<div id="restart-container">
+    <button id="restart-button" onclick="confirmRestart()">Restart</button>
+</div>
+
+</body>
+</html>
