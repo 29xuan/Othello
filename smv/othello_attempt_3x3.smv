@@ -1,0 +1,421 @@
+MODULE main
+
+DEFINE
+  EMPTY := 0;
+  BLACK := 1;
+  WHITE := 2;
+
+VAR
+  -- Simplified 3x3 chessboard
+  board : array 0..2 of array 0..2 of 0..2;
+  
+  current_player : 1..2;
+  
+  -- 0=In the game, 1=End of the game
+  game_state : 0..1;
+  
+  -- Turn number
+  turn : 0..10;
+  
+  -- Current move position under consideration
+  check_row : 0..2;
+  check_col : 0..2;
+  
+  -- Selected move position
+  move_row : 0..2;
+  move_col : 0..2;
+  
+  -- State machine states
+  state : {finding_move, making_move, next_player, game_over};
+
+-- Initial state
+INIT
+  -- Initial board configuration
+  board[0][0] = EMPTY & board[0][1] = EMPTY & board[0][2] = EMPTY &
+  board[1][0] = EMPTY & board[1][1] = WHITE & board[1][2] = BLACK &
+  board[2][0] = EMPTY & board[2][1] = BLACK & board[2][2] = WHITE &
+  
+ -- Black plays first
+  current_player = BLACK &
+  
+  -- Game state: In progress
+  game_state = 0 &
+  
+  -- Initial turn
+  turn = 0 &
+  
+  -- Initial check position
+  check_row = 0 &
+  check_col = 0 &
+  
+  -- Initial move position (invalid)
+  move_row = 0 &
+  move_col = 0 &
+  
+  -- Initial state: Finding move
+  state = finding_move;
+
+-- Opponent's piece
+DEFINE
+  opponent_player := 
+    case
+      current_player = BLACK : WHITE;
+      TRUE : BLACK;
+    esac;
+
+-- Get the column index to the left
+DEFINE
+  left_col := 
+    case
+      check_col = 0 : 0; -- 无效位置，但我们会在使用时检查check_col > 0
+      check_col = 1 : 0;
+      check_col = 2 : 1;
+      TRUE : 0; -- 默认情况，不应该发生
+    esac;
+
+-- Get the row index above
+DEFINE
+  up_row :=
+    case
+      check_row = 0 : 0; -- 无效位置，但我们会在使用时检查check_row > 0
+      check_row = 1 : 0;
+      check_row = 2 : 1;
+      TRUE : 0; -- 默认情况，不应该发生
+    esac;
+
+-- Check right direction
+DEFINE
+  check_right := (check_col < 2) & (board[check_row][check_col+1] = opponent_player);
+
+-- Check downward direction
+DEFINE
+  check_down := (check_row < 2) & (board[check_row+1][check_col] = opponent_player);
+
+-- Check left direction
+DEFINE
+  check_left := (check_col > 0) & (board[check_row][left_col] = opponent_player);
+
+-- Check upward direction
+DEFINE
+  check_up := (check_row > 0) & (board[up_row][check_col] = opponent_player);
+
+-- Check bottom-right direction
+DEFINE
+  check_down_right := (check_row < 2) & (check_col < 2) & (board[check_row+1][check_col+1] = opponent_player);
+
+-- Check bottom-left direction
+DEFINE
+  check_down_left := (check_row < 2) & (check_col > 0) & (board[check_row+1][left_col] = opponent_player);
+
+-- Check top-right direction
+DEFINE
+  check_up_right := (check_row > 0) & (check_col < 2) & (board[up_row][check_col+1] = opponent_player);
+
+-- Check top-left direction
+DEFINE
+  check_up_left := (check_row > 0) & (check_col > 0) & (board[up_row][left_col] = opponent_player);
+
+-- Determine if a position can be occupied by the current player (simplified)
+-- In actual Othello, checking all 8 directions is required
+DEFINE
+  can_place_at_current_pos :=
+    -- Position must be empty
+    board[check_row][check_col] = EMPTY &
+    
+    -- Simplified rule: There must be an opponent's piece adjacent (horizontally, vertically, or diagonally)
+    (
+      check_right | check_down | check_left | check_up |
+      check_down_right | check_down_left | check_up_right | check_up_left
+    );
+
+-- Determine if there is any valid move
+DEFINE
+  -- Check position (0,0)
+  can_place_at_0_0 :=
+    board[0][0] = EMPTY &
+    (
+      (board[0][1] = opponent_player) |
+      (board[1][0] = opponent_player) |
+      (board[1][1] = opponent_player)
+    );
+    
+  -- Check position (0,1)
+  can_place_at_0_1 :=
+    board[0][1] = EMPTY &
+    (
+      (board[0][0] = opponent_player) |
+      (board[0][2] = opponent_player) |
+      (board[1][0] = opponent_player) |
+      (board[1][1] = opponent_player) |
+      (board[1][2] = opponent_player)
+    );
+    
+  -- Check position (0,2)
+  can_place_at_0_2 :=
+    board[0][2] = EMPTY &
+    (
+      (board[0][1] = opponent_player) |
+      (board[1][1] = opponent_player) |
+      (board[1][2] = opponent_player)
+    );
+    
+  -- Check position (1,0)
+  can_place_at_1_0 :=
+    board[1][0] = EMPTY &
+    (
+      (board[0][0] = opponent_player) |
+      (board[0][1] = opponent_player) |
+      (board[1][1] = opponent_player) |
+      (board[2][0] = opponent_player) |
+      (board[2][1] = opponent_player)
+    );
+    
+  -- Check position (1,1)
+  can_place_at_1_1 :=
+    board[1][1] = EMPTY &
+    (
+      (board[0][0] = opponent_player) |
+      (board[0][1] = opponent_player) |
+      (board[0][2] = opponent_player) |
+      (board[1][0] = opponent_player) |
+      (board[1][2] = opponent_player) |
+      (board[2][0] = opponent_player) |
+      (board[2][1] = opponent_player) |
+      (board[2][2] = opponent_player)
+    );
+    
+  -- Check position (1,2)
+  can_place_at_1_2 :=
+    board[1][2] = EMPTY &
+    (
+      (board[0][1] = opponent_player) |
+      (board[0][2] = opponent_player) |
+      (board[1][1] = opponent_player) |
+      (board[2][1] = opponent_player) |
+      (board[2][2] = opponent_player)
+    );
+    
+  -- Check position (2,0)
+  can_place_at_2_0 :=
+    board[2][0] = EMPTY &
+    (
+      (board[1][0] = opponent_player) |
+      (board[1][1] = opponent_player) |
+      (board[2][1] = opponent_player)
+    );
+    
+  -- Check position (2,1)
+  can_place_at_2_1 :=
+    board[2][1] = EMPTY &
+    (
+      (board[1][0] = opponent_player) |
+      (board[1][1] = opponent_player) |
+      (board[1][2] = opponent_player) |
+      (board[2][0] = opponent_player) |
+      (board[2][2] = opponent_player)
+    );
+    
+  -- Check position (2,2)
+  can_place_at_2_2 :=
+    board[2][2] = EMPTY &
+    (
+      (board[1][1] = opponent_player) |
+      (board[1][2] = opponent_player) |
+      (board[2][1] = opponent_player)
+    );
+
+-- Determine whether there is a valid movement
+DEFINE
+  any_valid_move_exists :=
+    can_place_at_0_0 | can_place_at_0_1 | can_place_at_0_2 |
+    can_place_at_1_0 | can_place_at_1_1 | can_place_at_1_2 |
+    can_place_at_2_0 | can_place_at_2_1 | can_place_at_2_2;
+
+-- Move position related auxiliary functions
+DEFINE
+  -- Get the column index to the left of the move position
+  move_left_col := 
+    case
+      move_col = 0 : 0; --Invalid location, but we will check move_col > 0 when using
+      move_col = 1 : 0;
+      move_col = 2 : 1;
+      TRUE : 0; -- Default case, should not happen
+    esac;
+
+  -- Get the row index above the move position
+  move_up_row :=
+    case
+      move_row = 0 : 0; -- Invalid position, but we check move_row > 0 before using
+      move_row = 1 : 0;
+      move_row = 2 : 1;
+      TRUE : 0; -- Default case, should not happen
+    esac;
+
+-- State machine transitions
+TRANS
+  next(state) = 
+    case
+      -- End of the game
+      game_state = 1 : game_over;
+      
+      -- Transition from finding a move to making a move
+      state = finding_move & can_place_at_current_pos : making_move;
+      
+      -- If the position is not valid, continue checking the next position
+      state = finding_move : 
+        case
+          -- If all positions are checked and no valid move is found
+          check_row = 2 & check_col = 2 & !can_place_at_current_pos : next_player;
+          TRUE : finding_move;
+        esac;
+      
+      -- After making a move, switch to the next player
+      state = making_move : next_player;
+      
+      -- After switching, check if the game should end
+      state = next_player :
+        case
+          -- Game ends if no valid moves for both players or board is full
+          turn >= 9 | (!any_valid_move_exists) : game_over;
+          TRUE : finding_move;
+        esac;
+      
+      -- Game over state remains unchanged
+      state = game_over : game_over;
+      
+      TRUE : state;
+    esac;
+
+-- Turn counter update
+TRANS
+  next(turn) = 
+    case
+      state = next_player : turn + 1;
+      TRUE : turn;
+    esac;
+
+-- Player alternation
+TRANS
+  next(check_row) = 
+    case
+      -- When looking for a moving state, if it is not a valid movement, move to the next position
+      state = finding_move & !can_place_at_current_pos :
+        case
+          check_col = 2 : (check_row + 1) mod 3;
+          TRUE : check_row;
+        esac;
+      
+      -- Reset to 0 when a valid move is found or a state change is changed.
+      state = next_player : 0;
+      
+      -- Other situations remain the same
+      TRUE : check_row;
+    esac;
+
+TRANS
+  next(check_col) = 
+    case
+      -- When looking for a moving state, if it is not a valid movement, move to the next position
+      state = finding_move & !can_place_at_current_pos :
+        case
+          check_col = 2 : 0;
+          TRUE : check_col + 1;
+        esac;
+      
+      -- Reset to 0 when a valid move is found or a state change is changed.
+      state = next_player : 0;
+      
+      -- Other situations remain the same
+      TRUE : check_col;
+    esac;
+
+-- Move location update
+TRANS
+  next(move_row) = 
+    case
+      state = finding_move & can_place_at_current_pos : check_row;
+      TRUE : move_row;
+    esac;
+
+TRANS
+  next(move_col) = 
+    case
+      state = finding_move & can_place_at_current_pos : check_col;
+      TRUE : move_col;
+    esac;
+
+-- Players alternate
+TRANS
+  next(current_player) = 
+    case
+      state = next_player : opponent_player;
+      TRUE : current_player;
+    esac;
+
+-- Game status update
+TRANS
+  next(game_state) = 
+    case
+      state = game_over : 1;
+      TRUE : game_state;
+    esac;
+
+-- Chessboard update
+TRANS
+  -- Update the board when valid move is found and executed
+  state = making_move -> 
+    (next(board[move_row][move_col]) = current_player);
+
+-- Flip the opponent's chess piece (simplified version)
+TRANS
+  -- Simplified flip logic: flip only opponent pieces that move adjacent positions
+  state = making_move ->
+    (
+      -- Flip right
+      (move_col < 2 & board[move_row][move_col+1] = opponent_player -> 
+         next(board[move_row][move_col+1]) = current_player) &
+      
+      -- Flip down
+      (move_row < 2 & board[move_row+1][move_col] = opponent_player -> 
+         next(board[move_row+1][move_col]) = current_player) &
+      
+      -- Flip left
+      (move_col > 0 & board[move_row][move_left_col] = opponent_player -> 
+         next(board[move_row][move_left_col]) = current_player) &
+      
+      -- Flip up
+      (move_row > 0 & board[move_up_row][move_col] = opponent_player -> 
+         next(board[move_up_row][move_col]) = current_player) &
+      
+      -- Flip down to the right
+      (move_row < 2 & move_col < 2 & board[move_row+1][move_col+1] = opponent_player -> 
+         next(board[move_row+1][move_col+1]) = current_player) &
+      
+      -- Flip down to the left
+      (move_row < 2 & move_col > 0 & board[move_row+1][move_left_col] = opponent_player -> 
+         next(board[move_row+1][move_left_col]) = current_player) &
+      
+      -- Flip to the upper right
+      (move_row > 0 & move_col < 2 & board[move_up_row][move_col+1] = opponent_player -> 
+         next(board[move_up_row][move_col+1]) = current_player) &
+      
+      -- Flip to the upper left
+      (move_row > 0 & move_col > 0 & board[move_up_row][move_left_col] = opponent_player -> 
+         next(board[move_up_row][move_left_col]) = current_player)
+    );
+
+-- Non-flip position remains unchanged
+TRANS
+  -- If it is not making_move state, the board remains unchanged
+  state != making_move -> next(board) = board;
+
+-- Verify properties
+
+-- The game ends
+LTLSPEC F state = game_over;
+
+-- The state remains unchanged after the game ends
+LTLSPEC G (state = game_over -> G state = game_over);
+
+-- Players alternately play chess
+LTLSPEC G (state = next_player -> X(current_player != current_player)); 
