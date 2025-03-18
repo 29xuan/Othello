@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Othello</title>
+    <script src="/static/othello.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/othello.css">
+</head>
+
+<body>
+<!--<h1>Othello Game</h1>-->
+<h1 id="game-title">Othello Game</h1>
+
+<!-- Scoreboard (add turn-indicator） -->
+    <div class="scoreboard">
+        <div class="score-container">
+            <span class="black-score">
+                <div class="black-circle"></div> <span id="black-count">8</span>
+            </span>
+            <span class="white-score">
+                <div class="white-circle"></div> <span id="white-count">6</span>
+            </span>
+        </div>
+    </div>
+
+<!-- Let the current round be displayed below the score -->
+<div id="turn-indicator">Your turn</div>
+
+<!-- checkerboard -->
+<div id="board"></div>
+
+<!-- Let the Restart button appear below the board -->
+<div id="restart-container">
+    <button id="restart-button" onclick="confirmRestart()">Restart</button>
+</div>
+
+<!-- Formal Verification Panel -->
+<div id="verification-panel">
+    <div class="verification-header">
+        <h3>Formal Verification</h3>
+        <button class="verification-toggle" onclick="toggleVerificationResults()">Show/Hide Results</button>
+    </div>
+    <div id="verification-results" style="display:none;">
+        <!-- Verification results will be populated here by JavaScript -->
+    </div>
+</div>
+
+</body>
+</html>

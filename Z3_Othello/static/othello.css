@@ -1,0 +1,233 @@
+#game-title {
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 40px;
+}
+
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    gap: 2px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    background-color: #9fabb9;
+    border: 1px solid black !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* 黑白棋子 */
+.black, .white {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.black {
+    background-color: black;
+}
+
+.white {
+    background-color: white;
+    border: 1px solid black;
+}
+
+/* When it is the user's turn, the legal placement will be displayed in dark green. */
+.valid-move {
+    background-color: #5B7493 !important; /* 深绿色 */
+}
+
+/* AI or the chess piece that the player just fell (with red dots in the middle) */
+.ai-move {
+    position: relative;
+}
+
+.ai-move::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Flipped chess piece (with red frame outside) */
+.highlight {
+    border: 2px solid red;
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 24px;
+    color: black;
+    background-color: #ccc;  /* Set gray backgrounds */
+    padding: 10px;  /* Add some inner margins so that the content will not be pasted */
+    border-radius: 10px;  /* Make the background board rounded corners more beautiful */
+    width: 300px;  /* Let it automatically adapt to content width */
+    margin: 0 auto;  /* Center */
+}
+
+.score-container {
+    display: flex;
+    justify-content: center;  /* Let the black and white chess pieces center */
+    align-items: center;
+    gap: 20px;  /* Control the spacing between black and white chess pieces */
+    flex-direction: row; /* Arrange the number of black and white chess pieces horizontally */
+}
+.black-score, .white-score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.black-circle, .white-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid black;
+}
+.black-circle { background-color: black; }
+.white-circle { background-color: white; }
+
+
+#turn-indicator {
+    text-align: center; /* Let the text center horizontally */
+    font-size: 22px;  /* Enlarge the font to make it clearer */
+    color: white;  /* Make the text white and enhance the contrast */
+    background-color: #3D3D3D;  /* Set as blue background */
+    padding: 5px 15px;  /* Increase the inner margin to make it more beautiful */
+    border-radius: 10px;  /* Make the background rounded */
+    width: fit-content;  /* Make the background width suitable for the content */
+    margin: 15px auto;  /* Up and down spacing, centered */
+}
+
+#restart-container {
+    display: flex;
+    justify-content: center;  /* Center horizontally */
+    margin-top: 20px;  /* Adjust the spacing appropriately */
+}
+#restart-button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background-color: #b77f70;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#restart-button:hover {
+    background-color: darkred;
+}
+
+
+/* Verification Panel Styles */
+#verification-panel {
+    margin: 20px auto;
+    max-width: 650px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    overflow: hidden;
+}
+
+.verification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.verification-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.verification-toggle {
+    background: #627a9a;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.verification-toggle:hover {
+    background-color: #506584;
+}
+
+#verification-results {
+    padding: 10px 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.verification-item {
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Style for nested verification items */
+.verification-item .verification-item {
+    margin-left: 20px;
+    margin-bottom: 5px;
+    border-left: 2px solid #ddd;
+    padding-left: 10px;
+}
+
+.verification-passed {
+    background-color: #e6ffe6;
+    border-left: 4px solid #4CAF50;
+}
+
+.verification-failed {
+    background-color: #ffebeb;
+    border-left: 4px solid #f44336;
+}
+
+.verification-pending {
+    background-color: #fff9e6;
+    border-left: 4px solid #ffb74d;
+}
+
+#verify-button {
+    display: block;
+    margin: 10px auto;
+    background-color: #627a9a;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#verify-button:hover {
+    background-color: #506584;
+}
