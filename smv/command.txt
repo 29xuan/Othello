@@ -1,0 +1,1 @@
+/Users/changli/Documents/Courses/25spring/CS6315/installations/nuXmv/bin/nuXmv othello_16.smv

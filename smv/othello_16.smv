@@ -38,85 +38,99 @@ DEFINE
       TRUE : BLACK;
     esac;
 
+  check_row_plus_1 := case check_row <= 2 : check_row + 1; TRUE : 3; esac;
+  check_row_plus_2 := case check_row <= 1 : check_row + 2; TRUE : 3; esac;
+  check_row_plus_3 := case check_row <= 0 : check_row + 3; TRUE : 3; esac;
+  check_row_minus_1 := case check_row >= 1 : check_row - 1; TRUE : 0; esac;
+  check_row_minus_2 := case check_row >= 2 : check_row - 2; TRUE : 0; esac;
+  check_row_minus_3 := case check_row >= 3 : check_row - 3; TRUE : 0; esac;
+  check_col_plus_1 := case check_col <= 2 : check_col + 1; TRUE : 3; esac;
+  check_col_plus_2 := case check_col <= 1 : check_col + 2; TRUE : 3; esac;
+  check_col_plus_3 := case check_col <= 0 : check_col + 3; TRUE : 3; esac;
+  check_col_minus_1 := case check_col >= 1 : check_col - 1; TRUE : 0; esac;
+  check_col_minus_2 := case check_col >= 2 : check_col - 2; TRUE : 0; esac;
+  check_col_minus_3 := case check_col >= 3 : check_col - 3; TRUE : 0; esac;
+
+  DEFINE
   check_valid_right :=
     (check_col <= 1 &
-      board[check_row][check_col+1] = opponent_player &
-      board[check_row][check_col+2] = current_player)
+      board[check_row][check_col_plus_1] = opponent_player &
+      board[check_row][check_col_plus_2] = current_player)
     |
     (check_col <= 0 &
-      board[check_row][check_col+1] = opponent_player &
-      board[check_row][check_col+2] = opponent_player &
-      board[check_row][check_col+3] = current_player);
+      board[check_row][check_col_plus_1] = opponent_player &
+      board[check_row][check_col_plus_2] = opponent_player &
+      board[check_row][check_col_plus_3] = current_player);
 
   check_valid_left :=
     (check_col >= 2 &
-      board[check_row][check_col-1] = opponent_player &
-      board[check_row][check_col-2] = current_player)
+      board[check_row][check_col_minus_1] = opponent_player &
+      board[check_row][check_col_minus_2] = current_player)
     |
     (check_col >= 3 &
-      board[check_row][check_col-1] = opponent_player &
-      board[check_row][check_col-2] = opponent_player &
-      board[check_row][check_col-3] = current_player);
+      board[check_row][check_col_minus_1] = opponent_player &
+      board[check_row][check_col_minus_2] = opponent_player &
+      board[check_row][check_col_minus_3] = current_player);
 
   check_valid_down :=
     (check_row <= 1 &
-      board[check_row+1][check_col] = opponent_player &
-      board[check_row+2][check_col] = current_player)
+      board[check_row_plus_1][check_col] = opponent_player &
+      board[check_row_plus_2][check_col] = current_player)
     |
     (check_row <= 0 &
-      board[check_row+1][check_col] = opponent_player &
-      board[check_row+2][check_col] = opponent_player &
-      board[check_row+3][check_col] = current_player);
+      board[check_row_plus_1][check_col] = opponent_player &
+      board[check_row_plus_2][check_col] = opponent_player &
+      board[check_row_plus_3][check_col] = current_player);
 
   check_valid_up :=
     (check_row >= 2 &
-      board[check_row-1][check_col] = opponent_player &
-      board[check_row-2][check_col] = current_player)
+      board[check_row_minus_1][check_col] = opponent_player &
+      board[check_row_minus_2][check_col] = current_player)
     |
     (check_row >= 3 &
-      board[check_row-1][check_col] = opponent_player &
-      board[check_row-2][check_col] = opponent_player &
-      board[check_row-3][check_col] = current_player);
+      board[check_row_minus_1][check_col] = opponent_player &
+      board[check_row_minus_2][check_col] = opponent_player &
+      board[check_row_minus_3][check_col] = current_player);
 
   check_valid_down_right :=
     (check_row <= 1 & check_col <= 1 &
-      board[check_row+1][check_col+1] = opponent_player &
-      board[check_row+2][check_col+2] = current_player)
+      board[check_row_plus_1][check_col_plus_1] = opponent_player &
+      board[check_row_plus_2][check_col_plus_2] = current_player)
     |
     (check_row <= 0 & check_col <= 0 &
-      board[check_row+1][check_col+1] = opponent_player &
-      board[check_row+2][check_col+2] = opponent_player &
-      board[check_row+3][check_col+3] = current_player);
+      board[check_row_plus_1][check_col_plus_1] = opponent_player &
+      board[check_row_plus_2][check_col_plus_2] = opponent_player &
+      board[check_row_plus_3][check_col_plus_3] = current_player);
 
   check_valid_down_left :=
     (check_row <= 1 & check_col >= 2 &
-      board[check_row+1][check_col-1] = opponent_player &
-      board[check_row+2][check_col-2] = current_player)
+      board[check_row_plus_1][check_col_minus_1] = opponent_player &
+      board[check_row_plus_2][check_col_minus_2] = current_player)
     |
     (check_row <= 0 & check_col >= 3 &
-      board[check_row+1][check_col-1] = opponent_player &
-      board[check_row+2][check_col-2] = opponent_player &
-      board[check_row+3][check_col-3] = current_player);
+      board[check_row_plus_1][check_col_minus_1] = opponent_player &
+      board[check_row_plus_2][check_col_minus_2] = opponent_player &
+      board[check_row_plus_3][check_col_minus_3] = current_player);
 
   check_valid_up_right :=
     (check_row >= 2 & check_col <= 1 &
-      board[check_row-1][check_col+1] = opponent_player &
-      board[check_row-2][check_col+2] = current_player)
+      board[check_row_minus_1][check_col_plus_1] = opponent_player &
+      board[check_row_minus_2][check_col_plus_2] = current_player)
     |
     (check_row >= 3 & check_col <= 0 &
-      board[check_row-1][check_col+1] = opponent_player &
-      board[check_row-2][check_col+2] = opponent_player &
-      board[check_row-3][check_col+3] = current_player);
+      board[check_row_minus_1][check_col_plus_1] = opponent_player &
+      board[check_row_minus_2][check_col_plus_2] = opponent_player &
+      board[check_row_minus_3][check_col_plus_3] = current_player);
 
   check_valid_up_left :=
     (check_row >= 2 & check_col >= 2 &
-      board[check_row-1][check_col-1] = opponent_player &
-      board[check_row-2][check_col-2] = current_player)
+      board[check_row_minus_1][check_col_minus_1] = opponent_player &
+      board[check_row_minus_2][check_col_minus_2] = current_player)
     |
     (check_row >= 3 & check_col >= 3 &
-      board[check_row-1][check_col-1] = opponent_player &
-      board[check_row-2][check_col-2] = opponent_player &
-      board[check_row-3][check_col-3] = current_player);
+      board[check_row_minus_1][check_col_minus_1] = opponent_player &
+      board[check_row_minus_2][check_col_minus_2] = opponent_player &
+      board[check_row_minus_3][check_col_minus_3] = current_player);
 
   can_place_at_current_pos :=
     board[check_row][check_col] = EMPTY &
@@ -183,19 +197,18 @@ TRANS
     esac;
 
 TRANS
-  next(check_row) :=
+  next(check_row) =
     case
       state = finding_move & !can_place_at_current_pos & check_col = 3 & check_row < 3 : check_row + 1;
       state = next_player : 0;
       TRUE : check_row;
     esac;
-  next(check_col) :=
+
+TRANS
+  next(check_col) =
     case
-      state = finding_move & !can_place_at_current_pos :
-        case
-          check_col = 3 : 0;
-          TRUE : check_col + 1;
-        esac;
+      state = finding_move & !can_place_at_current_pos & check_col = 3 : 0;
+      state = finding_move & !can_place_at_current_pos : check_col + 1;
       state = next_player : 0;
       TRUE : check_col;
     esac;
@@ -232,55 +245,72 @@ TRANS
   state = making_move -> 
     (next(board[move_row][move_col]) = current_player);
 
+DEFINE
+  move_row_plus_1 := case move_row <= 2 : move_row + 1; TRUE : 3; esac;
+  move_row_plus_2 := case move_row <= 1 : move_row + 2; TRUE : 3; esac;
+  move_row_plus_3 := case move_row <= 0 : move_row + 3; TRUE : 3; esac;
+
+  move_row_minus_1 := case move_row >= 1 : move_row - 1; TRUE : 0; esac;
+  move_row_minus_2 := case move_row >= 2 : move_row - 2; TRUE : 0; esac;
+  move_row_minus_3 := case move_row >= 3 : move_row - 3; TRUE : 0; esac;
+
+  move_col_plus_1 := case move_col <= 2 : move_col + 1; TRUE : 3; esac;
+  move_col_plus_2 := case move_col <= 1 : move_col + 2; TRUE : 3; esac;
+  move_col_plus_3 := case move_col <= 0 : move_col + 3; TRUE : 3; esac;
+
+  move_col_minus_1 := case move_col >= 1 : move_col - 1; TRUE : 0; esac;
+  move_col_minus_2 := case move_col >= 2 : move_col - 2; TRUE : 0; esac;
+  move_col_minus_3 := case move_col >= 3 : move_col - 3; TRUE : 0; esac;
+
 TRANS
   state = making_move -> (
     -- RIGHT
-    (move_col <= 2 & board[move_row][move_col+1] = opponent_player & board[move_row][move_col+2] = current_player ->
-      next(board[move_row][move_col+1]) = current_player) &
-    (move_col <= 1 & board[move_row][move_col+1] = opponent_player & board[move_row][move_col+2] = opponent_player & board[move_row][move_col+3] = current_player ->
-      next(board[move_row][move_col+1]) = current_player & next(board[move_row][move_col+2]) = current_player) &
+    (move_col <= 2 & board[move_row][move_col_plus_1] = opponent_player & board[move_row][move_col_plus_2] = current_player ->
+      next(board[move_row][move_col_plus_1]) = current_player) &
+    (move_col <= 1 & board[move_row][move_col_plus_1] = opponent_player & board[move_row][move_col_plus_2] = opponent_player & board[move_row][move_col_plus_3] = current_player ->
+      next(board[move_row][move_col_plus_1]) = current_player & next(board[move_row][move_col_plus_2]) = current_player) &
 
     -- LEFT
-    (move_col >= 2 & board[move_row][move_col-1] = opponent_player & board[move_row][move_col-2] = current_player ->
-      next(board[move_row][move_col-1]) = current_player) &
-    (move_col >= 3 & board[move_row][move_col-1] = opponent_player & board[move_row][move_col-2] = opponent_player & board[move_row][move_col-3] = current_player ->
-      next(board[move_row][move_col-1]) = current_player & next(board[move_row][move_col-2]) = current_player) &
+    (move_col >= 2 & board[move_row][move_col_minus_1] = opponent_player & board[move_row][move_col_minus_2] = current_player ->
+      next(board[move_row][move_col_minus_1]) = current_player) &
+    (move_col >= 3 & board[move_row][move_col_minus_1] = opponent_player & board[move_row][move_col_minus_2] = opponent_player & board[move_row][move_col_minus_3] = current_player ->
+      next(board[move_row][move_col_minus_1]) = current_player & next(board[move_row][move_col_minus_2]) = current_player) &
 
     -- DOWN
-    (move_row <= 2 & board[move_row+1][move_col] = opponent_player & board[move_row+2][move_col] = current_player ->
-      next(board[move_row+1][move_col]) = current_player) &
-    (move_row <= 1 & board[move_row+1][move_col] = opponent_player & board[move_row+2][move_col] = opponent_player & board[move_row+3][move_col] = current_player ->
-      next(board[move_row+1][move_col]) = current_player & next(board[move_row+2][move_col]) = current_player) &
+    (move_row <= 2 & board[move_row_plus_1][move_col] = opponent_player & board[move_row_plus_2][move_col] = current_player ->
+      next(board[move_row_plus_1][move_col]) = current_player) &
+    (move_row <= 1 & board[move_row_plus_1][move_col] = opponent_player & board[move_row_plus_2][move_col] = opponent_player & board[move_row_plus_3][move_col] = current_player ->
+      next(board[move_row_plus_1][move_col]) = current_player & next(board[move_row_plus_2][move_col]) = current_player) &
 
     -- UP
-    (move_row >= 2 & board[move_row-1][move_col] = opponent_player & board[move_row-2][move_col] = current_player ->
-      next(board[move_row-1][move_col]) = current_player) &
-    (move_row >= 3 & board[move_row-1][move_col] = opponent_player & board[move_row-2][move_col] = opponent_player & board[move_row-3][move_col] = current_player ->
-      next(board[move_row-1][move_col]) = current_player & next(board[move_row-2][move_col]) = current_player) &
+    (move_row >= 2 & board[move_row_minus_1][move_col] = opponent_player & board[move_row_minus_2][move_col] = current_player ->
+      next(board[move_row_minus_1][move_col]) = current_player) &
+    (move_row >= 3 & board[move_row_minus_1][move_col] = opponent_player & board[move_row_minus_2][move_col] = opponent_player & board[move_row_minus_3][move_col] = current_player ->
+      next(board[move_row_minus_1][move_col]) = current_player & next(board[move_row_minus_2][move_col]) = current_player) &
 
     -- DOWN RIGHT
-    (move_row <= 2 & move_col <= 2 & board[move_row+1][move_col+1] = opponent_player & board[move_row+2][move_col+2] = current_player ->
-      next(board[move_row+1][move_col+1]) = current_player) &
-    (move_row <= 1 & move_col <= 1 & board[move_row+1][move_col+1] = opponent_player & board[move_row+2][move_col+2] = opponent_player & board[move_row+3][move_col+3] = current_player ->
-      next(board[move_row+1][move_col+1]) = current_player & next(board[move_row+2][move_col+2]) = current_player) &
+    (move_row <= 2 & move_col <= 2 & board[move_row_plus_1][move_col_plus_1] = opponent_player & board[move_row_plus_2][move_col_plus_2] = current_player ->
+      next(board[move_row_plus_1][move_col_plus_1]) = current_player) &
+    (move_row <= 1 & move_col <= 1 & board[move_row_plus_1][move_col_plus_1] = opponent_player & board[move_row_plus_2][move_col_plus_2] = opponent_player & board[move_row_plus_3][move_col_plus_3] = current_player ->
+      next(board[move_row_plus_1][move_col_plus_1]) = current_player & next(board[move_row_plus_2][move_col_plus_2]) = current_player) &
 
     -- DOWN LEFT
-    (move_row <= 2 & move_col >= 2 & board[move_row+1][move_col-1] = opponent_player & board[move_row+2][move_col-2] = current_player ->
-      next(board[move_row+1][move_col-1]) = current_player) &
-    (move_row <= 1 & move_col >= 3 & board[move_row+1][move_col-1] = opponent_player & board[move_row+2][move_col-2] = opponent_player & board[move_row+3][move_col-3] = current_player ->
-      next(board[move_row+1][move_col-1]) = current_player & next(board[move_row+2][move_col-2]) = current_player) &
+    (move_row <= 2 & move_col >= 2 & board[move_row_plus_1][move_col_minus_1] = opponent_player & board[move_row_plus_2][move_col_minus_2] = current_player ->
+      next(board[move_row_plus_1][move_col_minus_1]) = current_player) &
+    (move_row <= 1 & move_col >= 3 & board[move_row_plus_1][move_col_minus_1] = opponent_player & board[move_row_plus_2][move_col_minus_2] = opponent_player & board[move_row_plus_3][move_col_minus_3] = current_player ->
+      next(board[move_row_plus_1][move_col_minus_1]) = current_player & next(board[move_row_plus_2][move_col_minus_2]) = current_player) &
 
     -- UP RIGHT
-    (move_row >= 2 & move_col <= 2 & board[move_row-1][move_col+1] = opponent_player & board[move_row-2][move_col+2] = current_player ->
-      next(board[move_row-1][move_col+1]) = current_player) &
-    (move_row >= 3 & move_col <= 1 & board[move_row-1][move_col+1] = opponent_player & board[move_row-2][move_col+2] = opponent_player & board[move_row-3][move_col+3] = current_player ->
-      next(board[move_row-1][move_col+1]) = current_player & next(board[move_row-2][move_col+2]) = current_player) &
+    (move_row >= 2 & move_col <= 2 & board[move_row_minus_1][move_col_plus_1] = opponent_player & board[move_row_minus_2][move_col_plus_2] = current_player ->
+      next(board[move_row_minus_1][move_col_plus_1]) = current_player) &
+    (move_row >= 3 & move_col <= 1 & board[move_row_minus_1][move_col_plus_1] = opponent_player & board[move_row_minus_2][move_col_plus_2] = opponent_player & board[move_row_minus_3][move_col_plus_3] = current_player ->
+      next(board[move_row_minus_1][move_col_plus_1]) = current_player & next(board[move_row_minus_2][move_col_plus_2]) = current_player) &
 
     -- UP LEFT
-    (move_row >= 2 & move_col >= 2 & board[move_row-1][move_col-1] = opponent_player & board[move_row-2][move_col-2] = current_player ->
-      next(board[move_row-1][move_col-1]) = current_player) &
-    (move_row >= 3 & move_col >= 3 & board[move_row-1][move_col-1] = opponent_player & board[move_row-2][move_col-2] = opponent_player & board[move_row-3][move_col-3] = current_player ->
-      next(board[move_row-1][move_col-1]) = current_player & next(board[move_row-2][move_col-2]) = current_player)
+    (move_row >= 2 & move_col >= 2 & board[move_row_minus_1][move_col_minus_1] = opponent_player & board[move_row_minus_2][move_col_minus_2] = current_player ->
+      next(board[move_row_minus_1][move_col_minus_1]) = current_player) &
+    (move_row >= 3 & move_col >= 3 & board[move_row_minus_1][move_col_minus_1] = opponent_player & board[move_row_minus_2][move_col_minus_2] = opponent_player & board[move_row_minus_3][move_col_minus_3] = current_player ->
+      next(board[move_row_minus_1][move_col_minus_1]) = current_player & next(board[move_row_minus_2][move_col_minus_2]) = current_player)
   );
 
 TRANS
