@@ -1,2 +1,13 @@
 /Users/changli/Documents/Courses/25spring/CS6315/installations/nuXmv/bin/nuXmv othello_16.smv
+/Users/changli/Documents/Courses/25spring/CS6315/installations/nuXmv/bin/nuXmv -bmc othello_16.smv
+// neither of the code above works since there is a very large search space
+/Users/changli/Documents/Courses/25spring/CS6315/installations/nuXmv/bin/nuXmv -source property.smv
+
+/Users/changli/Documents/Courses/25spring/CS6315/installations/nuXmv/bin/nuXmv -int othello_16_abstract.smv
+read_model
+flatten_hierarchy
+build_flat_model
+
+LTLSPEC G (state = next_player -> X(current_player != current_player_prev));
+
 Acknowledgement: ChatGPT o3-mini-high is utilized for debugging nuXmv code.

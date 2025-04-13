@@ -8,8 +8,9 @@ DEFINE
 VAR
   board : array 0..3 of array 0..3 of 0..2;
   current_player : 1..2;
+  current_player_prev : 1..2;
   game_state : 0..1;
-  turn : 0..16;
+  turn : 0..1;
   check_row : 0..3;
   check_col : 0..3;
   move_row : 0..3;
@@ -17,12 +18,12 @@ VAR
   state : {finding_move, making_move, next_player, game_over};
 
 INIT
-  -- Initial board configuration
   board[0][0] = EMPTY & board[0][1] = EMPTY & board[0][2] = EMPTY & board[0][3] = EMPTY &
   board[1][0] = EMPTY & board[1][1] = WHITE & board[1][2] = BLACK & board[1][3] = EMPTY &
   board[2][0] = EMPTY & board[2][1] = BLACK & board[2][2] = WHITE & board[2][3] = EMPTY &
   board[3][0] = EMPTY & board[3][1] = EMPTY & board[3][2] = EMPTY & board[3][3] = EMPTY &
   current_player = BLACK &
+  current_player_prev = BLACK &
   game_state = 0 &
   turn = 0 &
   check_row = 0 &
@@ -37,21 +38,7 @@ DEFINE
       current_player = BLACK : WHITE;
       TRUE : BLACK;
     esac;
-
-  check_row_plus_1 := case check_row <= 2 : check_row + 1; TRUE : 3; esac;
-  check_row_plus_2 := case check_row <= 1 : check_row + 2; TRUE : 3; esac;
-  check_row_plus_3 := case check_row <= 0 : check_row + 3; TRUE : 3; esac;
-  check_row_minus_1 := case check_row >= 1 : check_row - 1; TRUE : 0; esac;
-  check_row_minus_2 := case check_row >= 2 : check_row - 2; TRUE : 0; esac;
-  check_row_minus_3 := case check_row >= 3 : check_row - 3; TRUE : 0; esac;
-  check_col_plus_1 := case check_col <= 2 : check_col + 1; TRUE : 3; esac;
-  check_col_plus_2 := case check_col <= 1 : check_col + 2; TRUE : 3; esac;
-  check_col_plus_3 := case check_col <= 0 : check_col + 3; TRUE : 3; esac;
-  check_col_minus_1 := case check_col >= 1 : check_col - 1; TRUE : 0; esac;
-  check_col_minus_2 := case check_col >= 2 : check_col - 2; TRUE : 0; esac;
-  check_col_minus_3 := case check_col >= 3 : check_col - 3; TRUE : 0; esac;
-
-  DEFINE
+  
   check_valid_right :=
     (check_col <= 1 &
       board[check_row][check_col_plus_1] = opponent_player &
@@ -132,6 +119,185 @@ DEFINE
       board[check_row_minus_2][check_col_minus_2] = opponent_player &
       board[check_row_minus_3][check_col_minus_3] = current_player);
 
+  check_row_plus_1 := case check_row <= 2 : check_row + 1; TRUE : 3; esac;
+  check_row_plus_2 := case check_row <= 1 : check_row + 2; TRUE : 3; esac;
+  check_row_plus_3 := case check_row <= 0 : check_row + 3; TRUE : 3; esac;
+  check_row_minus_1 := case check_row >= 1 : check_row - 1; TRUE : 0; esac;
+  check_row_minus_2 := case check_row >= 2 : check_row - 2; TRUE : 0; esac;
+  check_row_minus_3 := case check_row >= 3 : check_row - 3; TRUE : 0; esac;
+  check_col_plus_1 := case check_col <= 2 : check_col + 1; TRUE : 3; esac;
+  check_col_plus_2 := case check_col <= 1 : check_col + 2; TRUE : 3; esac;
+  check_col_plus_3 := case check_col <= 0 : check_col + 3; TRUE : 3; esac;
+  check_col_minus_1 := case check_col >= 1 : check_col - 1; TRUE : 0; esac;
+  check_col_minus_2 := case check_col >= 2 : check_col - 2; TRUE : 0; esac;
+  check_col_minus_3 := case check_col >= 3 : check_col - 3; TRUE : 0; esac;
+
+  DEFINE
+  valid_move_00 := board[0][0] = EMPTY &
+    (
+      ((board[0][1] = opponent_player & board[0][2] = current_player) |
+       (board[0][1] = opponent_player & board[0][2] = opponent_player & board[0][3] = current_player))
+      |
+      ((board[1][0] = opponent_player & board[2][0] = current_player) |
+       (board[1][0] = opponent_player & board[2][0] = opponent_player & board[3][0] = current_player))
+      |
+      ((board[1][1] = opponent_player & board[2][2] = current_player) |
+       (board[1][1] = opponent_player & board[2][2] = opponent_player & board[3][3] = current_player))
+    );
+
+  valid_move_01 := board[0][1] = EMPTY &
+    (
+      (board[0][2] = opponent_player & board[0][3] = current_player)
+      |
+      ((board[1][1] = opponent_player & board[2][1] = current_player) |
+       (board[1][1] = opponent_player & board[2][1] = opponent_player & board[3][1] = current_player))
+      |
+      (board[1][2] = opponent_player & board[2][3] = current_player)
+    );
+
+  valid_move_02 := board[0][2] = EMPTY &
+    (
+      (board[0][1] = opponent_player & board[0][0] = current_player)
+      |
+      ((board[1][2] = opponent_player & board[2][2] = current_player) |
+       (board[1][2] = opponent_player & board[2][2] = opponent_player & board[3][2] = current_player))
+      |
+      (board[1][1] = opponent_player & board[2][0] = current_player)
+    );
+
+  valid_move_03 := board[0][3] = EMPTY &
+    (
+      ((board[0][2] = opponent_player & board[0][1] = current_player) |
+       (board[0][2] = opponent_player & board[0][1] = opponent_player & board[0][0] = current_player))
+      |
+      ((board[1][3] = opponent_player & board[2][3] = current_player) |
+       (board[1][3] = opponent_player & board[2][3] = opponent_player & board[3][3] = current_player))
+      |
+      -- Down-Left (from [0,3]):
+      ((board[1][2] = opponent_player & board[2][1] = current_player) | 
+       (board[1][2] = opponent_player & board[2][1] = opponent_player & board[3][0] = current_player))
+    );
+
+  valid_move_10 := board[1][0] = EMPTY &
+    (
+      ((board[1][1] = opponent_player & board[1][2] = current_player) |
+       (board[1][1] = opponent_player & board[1][2] = opponent_player & board[1][3] = current_player))
+      |
+      (board[2][0] = opponent_player & board[3][0] = current_player)
+      |
+      (board[2][1] = opponent_player & board[3][2] = current_player)
+    );
+
+  valid_move_11 := board[1][1] = EMPTY &
+    (
+      (board[1][2] = opponent_player & board[1][3] = current_player)
+      |
+      (board[2][1] = opponent_player & board[3][1] = current_player)
+      |
+      (board[2][2] = opponent_player & board[3][3] = current_player)
+    );
+
+  valid_move_12 := board[1][2] = EMPTY &
+    (
+      (board[1][1] = opponent_player & board[1][0] = current_player)
+      |
+      (board[2][2] = opponent_player & board[3][2] = current_player)
+      |
+      (board[2][1] = opponent_player & board[3][0] = current_player)
+    );
+
+  valid_move_13 := board[1][3] = EMPTY &
+    (
+      ((board[1][2] = opponent_player & board[1][1] = current_player) |
+       (board[1][2] = opponent_player & board[1][1] = opponent_player & board[1][0] = current_player))
+      |
+      (board[2][3] = opponent_player & board[3][3] = current_player)
+      |
+      (board[2][2] = opponent_player & board[3][1] = current_player)
+    );
+
+  valid_move_20 := board[2][0] = EMPTY &
+    (
+      ((board[2][1] = opponent_player & board[2][2] = current_player) |
+       (board[2][1] = opponent_player & board[2][2] = opponent_player & board[2][3] = current_player))
+      |
+      (board[1][0] = opponent_player & board[0][0] = current_player)
+      |
+      (board[1][1] = opponent_player & board[0][2] = current_player)
+    );
+
+  valid_move_21 := board[2][1] = EMPTY &
+    (
+      (board[2][2] = opponent_player & board[2][3] = current_player)
+      |
+      (board[1][1] = opponent_player & board[0][1] = current_player)
+      |
+      (board[1][2] = opponent_player & board[0][3] = current_player)
+    );
+
+  valid_move_22 := board[2][2] = EMPTY &
+    (
+      (board[2][1] = opponent_player & board[2][0] = current_player)
+      |
+      (board[1][2] = opponent_player & board[0][2] = current_player)
+      |
+      (board[1][1] = opponent_player & board[0][0] = current_player)
+    );
+
+  valid_move_23 := board[2][3] = EMPTY &
+    (
+      ((board[2][2] = opponent_player & board[2][1] = current_player) |
+       (board[2][2] = opponent_player & board[2][1] = opponent_player & board[2][0] = current_player))
+      |
+      (board[1][3] = opponent_player & board[0][3] = current_player)
+      |
+      (board[1][2] = opponent_player & board[0][1] = current_player)
+    );
+
+  valid_move_30 := board[3][0] = EMPTY &
+    (
+      ((board[3][1] = opponent_player & board[3][2] = current_player) |
+       (board[3][1] = opponent_player & board[3][2] = opponent_player & board[3][3] = current_player))
+      |
+      ((board[2][0] = opponent_player & board[1][0] = current_player) | 
+       (board[2][0] = opponent_player & board[1][0] = opponent_player & board[0][0] = current_player))
+      |
+      ((board[2][1] = opponent_player & board[1][2] = current_player) | 
+       (board[2][1] = opponent_player & board[1][2] = opponent_player & board[0][3] = current_player))
+    );
+
+  valid_move_31 := board[3][1] = EMPTY &
+    (
+      (board[3][2] = opponent_player & board[3][3] = current_player)
+      |
+      ((board[2][1] = opponent_player & board[1][1] = current_player) | 
+       (board[2][1] = opponent_player & board[1][1] = opponent_player & board[0][0] = current_player))
+      |
+      (board[2][2] = opponent_player & board[1][3] = current_player)
+    );
+
+  valid_move_32 := board[3][2] = EMPTY &
+    (
+      (board[3][1] = opponent_player & board[3][0] = current_player)
+      |
+      ((board[2][2] = opponent_player & board[1][2] = current_player) | 
+       (board[2][2] = opponent_player & board[1][2] = opponent_player & board[0][2] = current_player))
+      |
+      (board[2][1] = opponent_player & board[1][0] = current_player)
+    );
+
+  valid_move_33 := board[3][3] = EMPTY &
+    (
+      ((board[3][2] = opponent_player & board[3][1] = current_player) |
+       (board[3][2] = opponent_player & board[3][1] = opponent_player & board[3][0] = current_player))
+      |
+      ((board[2][3] = opponent_player & board[1][3] = current_player) |
+       (board[2][3] = opponent_player & board[1][3] = opponent_player & board[0][3] = current_player))
+      |
+      ((board[2][2] = opponent_player & board[1][1] = current_player) |
+       (board[2][2] = opponent_player & board[1][1] = opponent_player & board[0][0] = current_player))
+    );
+
   can_place_at_current_pos :=
     board[check_row][check_col] = EMPTY &
     (
@@ -146,27 +312,22 @@ DEFINE
     );
 
   any_valid_move_exists :=
-    (
-      (check_row = 0 & check_col = 0 & can_place_at_current_pos) |
-      (check_row = 0 & check_col = 1 & can_place_at_current_pos) |
-      (check_row = 0 & check_col = 2 & can_place_at_current_pos) |
-      (check_row = 0 & check_col = 3 & can_place_at_current_pos) |
-      
-      (check_row = 1 & check_col = 0 & can_place_at_current_pos) |
-      (check_row = 1 & check_col = 1 & can_place_at_current_pos) |
-      (check_row = 1 & check_col = 2 & can_place_at_current_pos) |
-      (check_row = 1 & check_col = 3 & can_place_at_current_pos) |
-      
-      (check_row = 2 & check_col = 0 & can_place_at_current_pos) |
-      (check_row = 2 & check_col = 1 & can_place_at_current_pos) |
-      (check_row = 2 & check_col = 2 & can_place_at_current_pos) |
-      (check_row = 2 & check_col = 3 & can_place_at_current_pos) |
-      
-      (check_row = 3 & check_col = 0 & can_place_at_current_pos) |
-      (check_row = 3 & check_col = 1 & can_place_at_current_pos) |
-      (check_row = 3 & check_col = 2 & can_place_at_current_pos) |
-      (check_row = 3 & check_col = 3 & can_place_at_current_pos)
-    );
+      valid_move_00 |
+      valid_move_01 |
+      valid_move_02 |
+      valid_move_03 |
+      valid_move_10 |
+      valid_move_11 |
+      valid_move_12 |
+      valid_move_13 |
+      valid_move_20 |
+      valid_move_21 |
+      valid_move_22 |
+      valid_move_23 |
+      valid_move_30 |
+      valid_move_31 |
+      valid_move_32 |
+      valid_move_33;
 
 TRANS
   next(state) = 
@@ -197,20 +358,21 @@ TRANS
     esac;
 
 TRANS
-  next(check_row) =
+  next(check_col) =
     case
-      state = finding_move & !can_place_at_current_pos & check_col = 3 & check_row < 3 : check_row + 1;
+      state = finding_move & !can_place_at_current_pos & check_col < 3 : check_col + 1;
+      state = finding_move & !can_place_at_current_pos & check_col = 3 : 0;
       state = next_player : 0;
-      TRUE : check_row;
+      TRUE : check_col;
     esac;
 
 TRANS
-  next(check_col) =
+  next(check_row) =
     case
-      state = finding_move & !can_place_at_current_pos & check_col = 3 : 0;
-      state = finding_move & !can_place_at_current_pos : check_col + 1;
+      state = finding_move & !can_place_at_current_pos & check_col = 3 & check_row < 3 : check_row + 1;
+      state = finding_move & !can_place_at_current_pos & check_row = 3 & check_col = 3 : 0;
       state = next_player : 0;
-      TRUE : check_col;
+      TRUE : check_row;
     esac;
 
 TRANS
@@ -232,6 +394,13 @@ TRANS
     case
       state = next_player : opponent_player;
       TRUE : current_player;
+    esac;
+
+TRANS 
+  next (current_player_prev) = 
+    case
+      state = next_player : current_player;
+      TRUE : current_player_prev;
     esac;
 
 TRANS
@@ -318,4 +487,4 @@ TRANS
 
 LTLSPEC F state = game_over;
 LTLSPEC G (state = game_over -> G state = game_over);
-LTLSPEC G (state = next_player -> X(current_player != current_player)); 
+LTLSPEC G (state = next_player -> X(current_player != current_player_prev)); 

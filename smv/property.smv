@@ -1,0 +1,5 @@
+-- Example Property File for Othello Model
+-- The following property states that every time the state is next_player,
+-- in the next step the current_player changes (i.e., it is not equal to current_player_prev).
+
+LTLSPEC G (state = next_player -> X(current_player != current_player_prev));
