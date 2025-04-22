@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Othello</title>
+    <script src="/static/othello.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/othello.css">
+</head>
+
+<body>
+<!--<h1>Othello Game</h1>-->
+<h1 id="game-title">Othello Game</h1>
+
+<!-- Player role prompt -->
+<div id="role-indicator" style="display: none;">You play as <span class="black-text">Black</span>, AI plays as <span class="white-text">White</span></div>
+
+<!-- Scoreboard (add turn-indicator) -->
+    <div class="scoreboard">
+        <div class="score-container">
+            <span class="black-score">
+                <div class="black-circle"></div> <span>You: <span id="black-count">8</span></span>
+            </span>
+            <span class="white-score">
+                <div class="white-circle"></div> <span>AI: <span id="white-count">6</span></span>
+            </span>
+        </div>
+    </div>
+
+<!-- Let the current round be displayed below the score -->
+<div class="turn-container">
+    <div id="turn-indicator">Your turn</div>
+    <div id="hint-toggle" class="hint-icon" onclick="toggleGameHint()" style="display: none;">?</div>
+</div>
+
+<!-- Add progress bar to show game progress -->
+<div id="progress-container">
+    <div id="progress-bar"></div>
+    <div id="progress-text">Progress: 6%</div>
+</div>
+
+<!-- Game guidance prompt -->
+<div id="game-hint" onclick="toggleGameHint()">
+    <p><strong>Your Turn</strong>: Please choose one of the following options:</p>
+    <ul>
+        <li>Click on a valid position (highlighted in dark) to place your disc.</li>
+        <li>Click <strong>Z3 Suggests Human Move</strong> to get Z3's analysis and suggested optimal move.</li>
+        <li>Click <strong>Z3 Helps Human Move</strong> to automatically play the optimal move based on Z3's strategy.</li>
+    </ul>
+</div>
+
+<!-- Main game container with board and control buttons -->
+<div class="game-container">
+    <!-- checkerboard -->
+    <div id="board"></div>
+    
+    <!-- Control buttons panel on the right side -->
+    <div class="control-panel">
+        <div class="button-group control-buttons">
+            <button id="z3-helps-human-button" class="control-button">Z3 Helps Human Move</button>
+            <button id="verify-human-button" class="control-button">Verify Human Move</button>
+            <button id="ai-move-button" class="control-button">AI Move & Verify</button>
+        </div>
+        <div class="button-group info-buttons">
+            <button id="z3-hint-button" class="info-button" onclick="toggleZ3Hint()">Z3 Suggests Human Move</button>
+            <button id="how-to-play" class="info-button" onclick="toggleInstructions()">How to Play</button>
+        </div>
+        
+        <!-- Add AI Difficulty selection -->
+        <div class="difficulty-container">
+            <div class="difficulty-title">AI Difficulty</div>
+            <div class="difficulty-selection">
+                <button id="easy-mode" class="difficulty-button active" onclick="setDifficulty('easy')">Easy</button>
+                <button id="hard-mode" class="difficulty-button" onclick="setDifficulty('hard')">Hard</button>
+                <div id="difficulty-callout" class="difficulty-callout" style="display: block;">
+                    <h3 class="callout-title">Please select difficulty Level of the AI Opponent:</h3>
+                    <ul class="callout-list">
+                        <li><strong>Easy</strong>: AI selects the first valid move it finds.</li>
+                        <li><strong>Hard</strong>: AI evaluates positions and makes strategic moves.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Game instructions panel -->
+<div id="instructions-panel" style="display: none;">
+    <h3 class="centered-heading">How to Play</h3>
+    
+    <h4>Game Rules:</h4>
+    <ul>
+        <li>You can only place a disc in a position that will flip at least one of your opponent's discs.</li>
+        <li>To flip discs: Your newly placed disc must create a straight line (horizontal, vertical, or diagonal) with another of your discs, with your opponent's discs in between.</li>
+        <li>All opponent's discs between your newly placed disc and your existing disc will be flipped to your color.</li>
+        <li>The game ends when neither player can make a legal move.</li>
+        <li>The player with the most discs on the board wins.</li>
+    </ul>
+    
+    <h4>Playing Steps:</h4>
+    <ol>
+        <li>You play as Black, AI plays as White.</li>
+        <li>On your turn:
+            <ul>
+                <li>Click on a valid position (highlighted in dark) to place your disc, or</li>
+                <li>Use "Z3 Helps Human Move" for automated optimal move, or</li>
+                <li>Click "Z3 Suggests Human Move" to analyze the board and get strategic advice</li>
+            </ul>
+        </li>
+        <li>After placing your disc, you will see your disc placed and opponent's discs flipped.</li>
+        <li>Then you can either:
+            <ul>
+                <li>Click "Verify Human Move" to check if your move satisfies the game specifications, or</li>
+                <li>Click "AI Move & Verify" to directly let the AI make its move</li>
+            </ul>
+        </li>
+        <li>After AI's move, it will automatically verify the move and you can continue with your turn.</li>
+        <li>Game ends when no valid moves remain for either player. The player with the most discs wins.</li>
+    </ol>
+    <div class="button-container">
+        <button class="close-button" onclick="toggleInstructions()">Close</button>
+    </div>
+</div>
+
+<!-- Z3 Solver Hint Panel -->
+<div id="z3-hint-panel" style="display: none;">
+    <h3 class="centered-heading">Z3 Suggests Human Move</h3>
+    
+    <div id="z3-hint-content">
+        <!-- Z3 hint content will be populated here by JavaScript -->
+        <p>Analyzing best move...</p>
+    </div>
+    
+    <div class="button-container">
+        <button class="close-button" onclick="toggleZ3Hint()">Close</button>
+    </div>
+</div>
+
+<!-- Add modal overlay for closing the instructions panel when clicking outside -->
+<div id="modal-overlay" style="display: none;" onclick="closeAllPanels()"></div>
+
+<!-- Let the Restart button appear below the board -->
+<div id="restart-container">
+    <button id="restart-button" onclick="confirmRestart()">Restart</button>
+</div>
+
+<!-- Formal Verification Panel -->
+<div id="verification-panel">
+    <div class="verification-header">
+        <h3>Formal Verification</h3>
+        <button class="verification-toggle" onclick="toggleVerificationResults()">Show/Hide Results</button>
+    </div>
+    <div id="verification-results" style="display:none;">
+        <!-- Verification results will be populated here by JavaScript -->
+    </div>
+</div>
+
+</body>
+</html>
