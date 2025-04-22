@@ -54,7 +54,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Navigate to `http://localhost:5000` in your browser. For more usage instructions, please refer to the README.md file in each Z3 folder.
+Navigate to `http://localhost:5000` in your browser. For more usage instructions, please refer to the `README.md` file in each Z3 folder.
 
 ### nuXmv/SMV Version
 
@@ -72,7 +72,7 @@ bmc_setup
 check_ltlspec_bmc -k 5 -n 1
 ```
 
-Refer to `smv/README.md` for more usage instructions.
+Refer to `smv/README.md` file for more usage instructions.
 
 ## Acknowledgements
 
