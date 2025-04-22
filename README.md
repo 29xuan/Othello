@@ -9,9 +9,7 @@ We build and verify Othello on both $8 \times 8$ and $4 \times 4$ boards. Z3 is 
 ###  Z3 Features
 
 - **Runtime Specification Verification**: Enforces five core rules of Othello including board consistency, turn fairness, move legality, termination, and winner correctness.
-
 - **Strategic Move Recommendation**: Suggests optimal moves using a tiered solver architecture that combines symbolic reasoning and heuristic fallback models.
-
 - **Interactive Web Interface**: Users can verify moves, receive strategy suggestions, and play against AI of different difficulty levels.
 
   <img src="README/interactive_ui.png" alt="interactive_ui" style="zoom: 33%;" />
