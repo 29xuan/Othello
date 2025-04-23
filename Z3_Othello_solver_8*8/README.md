@@ -40,7 +40,6 @@ Z3_Othello_solver_8*8/
 - Flask
 - Z3 Solver
 - NumPy
-- Requests
 
 ### Running the Code
 
