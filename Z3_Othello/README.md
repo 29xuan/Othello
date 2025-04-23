@@ -50,7 +50,7 @@ pip install flask numpy z3-solver
 2. Clone or download the project code:
 
 ```bash
-git clone [repository-url]
+git clone https://github.com/29xuan/Othello.git
 cd Z3_Othello
 ```
 
