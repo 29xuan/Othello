@@ -43,7 +43,7 @@ We build and verify Othello on both $8 \times 8$ and $4 \times 4$ boards. Z3 is 
 #### Installation
 
 ```bash
-git clone https://github.com/yourusername/Z3_Othello_solver.git
+git clone https://github.com/29xuan/Othello.git
 cd Z3_Othello_solver
 pip install -r requirements.txt
 ```
