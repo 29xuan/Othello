@@ -28,6 +28,7 @@ Z3_Othello_solver_8*8/
 │   └── othello.css      # Game styling and responsive design
 ├── templates/           # HTML templates
 │   └── index.html       # Main game interface
+├── README/              # Images and resources used in README.md
 └── README.md            # This file
 ```
 
