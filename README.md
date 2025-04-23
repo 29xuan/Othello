@@ -4,7 +4,7 @@ This project implements the board game Othello with integrated formal verificati
 
 ## Project Overview
 
-We build and verify Othello on both 8X8 and 4X4 boards. Z3 is embedded into a Python-Flask web backend to support real-time specification verification and symbolic move recommendation. nuXmv is used to verify reachability and correctness properties offline using temporal logic, focusing on the $4 \times 4$ board to manage state complexity.
+We build and verify Othello on both 8X8 and 4X4 boards. Z3 is embedded into a Python-Flask web backend to support real-time specification verification and symbolic move recommendation. nuXmv is used to verify reachability and correctness properties offline using temporal logic, focusing on the 4X4 board to manage state complexity.
 
 ###  Z3 Features
 
