@@ -41,7 +41,6 @@ Z3_Othello_solver_4*4/
 - Flask
 - Z3 Solver
 - NumPy
-- Requests
 
 ### Running the Code
 
