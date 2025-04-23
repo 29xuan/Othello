@@ -84,3 +84,4 @@ Compared to the base Othello implementation (`Othello`), `Z3_Othello` adds:
 - [Z3 Theorem Prover](https://github.com/Z3Prover/z3) - Microsoft Research's constraint solver
 - [Flask Web Framework](https://flask.palletsprojects.com/) - Lightweight Python web framework
 - [Othello/Reversi](https://en.wikipedia.org/wiki/Reversi) - Classic board game concept and rules 
+- [ChatGPT](https://chat.openai.com) - Assisted with syntax understanding and debugging
