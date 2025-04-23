@@ -23,8 +23,8 @@ We build and verify Othello on both $8 \times 8$ and $4 \times 4$ boards. Z3 is 
 ## Repository Structure
 
 ```
-├── Othello/                  # Flask implementation of web-based Othello
-├── Z3_Othello/               # Z3-based specification verifier with web interface
+├── Othello/                   # Flask implementation of web-based Othello
+├── Z3_Othello/                # Z3-based specification verifier with web interface
 ├── Z3_Othello_solver_4*4/     # 4x4 board version with Z3 verifier and Z3 solver
 ├── Z3_Othello_solver_8*8/     # 8x8 board version with Z3 verifier and Z3 solver
 ├── smv/                       # nuXmv model checking scripts and SMV files
