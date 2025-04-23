@@ -2,7 +2,7 @@
 
 ## Overview
 
-`Z3_Othello_solver_4*4` is a compact version of the Othello game that integrates the Z3 to not only verify specifications but also to provide strategic move recommendations. This application features a 4X4 game board where players can compete against an AI with adjustable difficulty levels while receiving detailed analysis and hints for optimal moves based on formal verification techniques.
+`Z3_Othello_solver_4*4` is a compact version of the Othello game that integrates Z3 to not only verify specifications but also to provide strategic move recommendations. This application features a 4X4 game board where players can compete against an AI with adjustable difficulty levels while receiving detailed analysis and hints for optimal moves based on formal verification techniques.
 
 ## Features
 
