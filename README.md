@@ -23,13 +23,14 @@ We build and verify Othello on both 8X8 and 4X4 boards. Z3 is embedded into a Py
 ## Repository Structure
 
 ```
-├── Othello/                  # Flask implementation of web-based Othello
-├── Z3_Othello/               # Z3-based specification verifier with web interface
-├── Z3_Othello_solver_4*4/    # 4x4 board version with Z3 verifier and Z3 solver
-├── Z3_Othello_solver_8*8/    # 8x8 board version with Z3 verifier and Z3 solver
-├── smv/                      # nuXmv model checking scripts and SMV files
-├── README/                   # Images and resources used in README.md
-└── README.md                 # This file
+├── Othello/                       # Flask implementation of web-based Othello
+├── Z3_Othello/                    # Z3-based specification verifier with web interface
+├── Z3_Othello_solver_4*4/         # 4x4 board version with Z3 verifier and Z3 solver
+├── Z3_Othello_solver_8*8/         # 8x8 board version with Z3 verifier and Z3 solver
+├── Z3_Othello_solver_8*8_updated/ # Enhanced 8x8 Othello with Z3 verifier and multi-step lookahead Z3 solver
+├── smv/                           # nuXmv model checking scripts and SMV files
+├── README/                        # Images and resources used in README.md
+└── README.md                      # This file
 ```
 
 ## Getting Started
